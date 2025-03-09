@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>shape rng</title>
+    <title>Egg Game</title>
     <style>
         #egg {
             width: 50px;
@@ -17,13 +17,59 @@
             display: none;
         }
 
-        #colorBlock {
+        .shape {
             width: 50px;
             height: 50px;
             position: absolute;
             left: calc(50% - 25px);
             top: calc(50% - 25px);
             display: none;
+        }
+
+        .circle {
+            border-radius: 50%;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid;
+        }
+
+        .star {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid;
+            position: relative;
+            top: -6px;
+            left: -10px;
+            transform: rotate(35deg);
+        }
+
+        .star:before {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid;
+            position: absolute;
+            content: "";
+            top: 12px;
+            left: -10px;
+            transform: rotate(-70deg);
+        }
+
+        .star:after {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid;
+            position: absolute;
+            content: "";
+            top: 0px;
+            left: -10px;
+            transform: rotate(-140deg);
         }
 
         #openButton, #inventoryButton {
@@ -52,20 +98,28 @@
     <button id="openButton">Open</button>
     <button id="inventoryButton">Open Inventory</button>
     <div id="egg"></div>
-    <div id="colorBlock"></div>
+    <div id="colorBlock" class="shape"></div>
+    <div id="circle" class="shape circle"></div>
+    <div id="triangle" class="shape triangle"></div>
+    <div id="star" class="shape star"></div>
     <div id="inventory"></div>
 
     <script>
         const openButton = document.getElementById('openButton');
         const inventoryButton = document.getElementById('inventoryButton');
         const egg = document.getElementById('egg');
-        const colorBlock = document.getElementById('colorBlock');
+        const shapes = {
+            colorBlock: document.getElementById('colorBlock'),
+            circle: document.getElementById('circle'),
+            triangle: document.getElementById('triangle'),
+            star: document.getElementById('star')
+        };
         const inventory = document.getElementById('inventory');
-        const collectedColors = new Set();
+        const collectedItems = new Set();
 
         openButton.addEventListener('click', () => {
             egg.style.display = 'block';
-            colorBlock.style.display = 'none';
+            Object.values(shapes).forEach(shape => shape.style.display = 'none');
             shakeEgg();
         });
 
@@ -89,26 +143,38 @@
                     clearInterval(shakeInterval);
                     egg.style.transform = 'translateX(0)';
                     egg.style.display = 'none';
-                    showColorBlock();
+                    hatchShape();
                 }
             }, 50);
         }
 
-        function showColorBlock() {
-            const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            colorBlock.style.backgroundColor = randomColor;
-            colorBlock.style.display = 'block';
-            collectedColors.add(randomColor);
+        function hatchShape() {
+            const shapeTypes = ['colorBlock', 'circle', 'triangle', 'star'];
+            const randomShape = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+            const shape = shapes[randomShape];
+
+            if (randomShape === 'colorBlock') {
+                const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                shape.style.backgroundColor = randomColor;
+                collectedItems.add(`${randomShape}-${randomColor}`);
+            } else {
+                collectedItems.add(randomShape);
+            }
+
+            shape.style.display = 'block';
         }
 
         function displayInventory() {
             inventory.innerHTML = '';
-            collectedColors.forEach(color => {
-                const colorDiv = document.createElement('div');
-                colorDiv.className = 'inventory-item';
-                colorDiv.style.backgroundColor = color;
-                inventory.appendChild(colorDiv);
+            collectedItems.forEach(item => {
+                const [shapeType, color] = item.split('-');
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `inventory-item ${shapeType}`;
+                if (color) {
+                    itemDiv.style.backgroundColor = color;
+                }
+                inventory.appendChild(itemDiv);
             });
         }
     </script>
