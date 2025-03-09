@@ -37,6 +37,7 @@
 
         #egg {
             font-size: 50px;
+            transform-origin: bottom center;
         }
 
         #square {
@@ -50,13 +51,25 @@
         }
 
         .shake {
-            animation: shake 0.5s ease-in-out infinite;
+            animation: shake 0.25s ease-in-out infinite;
         }
 
         @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-10deg); }
-            75% { transform: rotate(10deg); }
+            0% { 
+                transform: rotate(0deg) translateX(0) translateY(0); 
+            }
+            25% { 
+                transform: rotate(-15deg) translateX(-5px) translateY(-3px); 
+            }
+            50% { 
+                transform: rotate(0deg) translateX(0) translateY(0); 
+            }
+            75% { 
+                transform: rotate(15deg) translateX(5px) translateY(-3px); 
+            }
+            100% { 
+                transform: rotate(0deg) translateX(0) translateY(0); 
+            }
         }
 
         .appear {
@@ -120,7 +133,7 @@
                 egg.classList.add('shake');
 
                 // Wait for shaking
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // Hide egg and show square
                 egg.classList.add('hidden');
