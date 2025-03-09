@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg Game</title>
+    <style>
+        #egg {
+            width: 50px;
+            height: 70px;
+            background-color: #fff;
+            border: 2px solid #000;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            left: calc(50% - 25px);
+            top: calc(50% - 35px);
+            display: none;
+        }
+
+        #colorBlock {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            left: calc(50% - 25px);
+            top: calc(50% - 25px);
+            display: none;
+        }
+
+        #openButton {
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <button id="openButton">Open</button>
+    <div id="egg"></div>
+    <div id="colorBlock"></div>
+
+    <script>
+        const openButton = document.getElementById('openButton');
+        const egg = document.getElementById('egg');
+        const colorBlock = document.getElementById('colorBlock');
+
+        openButton.addEventListener('click', () => {
+            egg.style.display = 'block';
+            colorBlock.style.display = 'none';
+            shakeEgg();
+        });
+
+        function shakeEgg() {
+            const shakeTimes = 20;
+            const shakeDistance = 10;
+            let shakeCount = 0;
+            let direction = 1;
+
+            const shakeInterval = setInterval(() => {
+                if (shakeCount < shakeTimes) {
+                    egg.style.transform = `translateX(${shakeDistance * direction}px)`;
+                    direction *= -1;
+                    shakeCount++;
+                } else {
+                    clearInterval(shakeInterval);
+                    egg.style.transform = 'translateX(0)';
+                    egg.style.display = 'none';
+                    showColorBlock();
+                }
+            }, 50);
+        }
+
+        function showColorBlock() {
+            const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            colorBlock.style.backgroundColor = randomColor;
+            colorBlock.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
