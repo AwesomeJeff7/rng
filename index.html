@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Egg Game</title>
+    <title>shape rng</title>
     <style>
         #egg {
             width: 50px;
@@ -26,26 +26,52 @@
             display: none;
         }
 
-        #openButton {
+        #openButton, #inventoryButton {
             display: block;
             margin: 20px auto;
+        }
+
+        #inventory {
+            display: none;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #000;
+            width: 200px;
+            text-align: center;
+        }
+
+        .inventory-item {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            margin: 5px;
         }
     </style>
 </head>
 <body>
     <button id="openButton">Open</button>
+    <button id="inventoryButton">Open Inventory</button>
     <div id="egg"></div>
     <div id="colorBlock"></div>
+    <div id="inventory"></div>
 
     <script>
         const openButton = document.getElementById('openButton');
+        const inventoryButton = document.getElementById('inventoryButton');
         const egg = document.getElementById('egg');
         const colorBlock = document.getElementById('colorBlock');
+        const inventory = document.getElementById('inventory');
+        const collectedColors = new Set();
 
         openButton.addEventListener('click', () => {
             egg.style.display = 'block';
             colorBlock.style.display = 'none';
             shakeEgg();
+        });
+
+        inventoryButton.addEventListener('click', () => {
+            inventory.style.display = inventory.style.display === 'none' ? 'block' : 'none';
+            displayInventory();
         });
 
         function shakeEgg() {
@@ -73,6 +99,17 @@
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             colorBlock.style.backgroundColor = randomColor;
             colorBlock.style.display = 'block';
+            collectedColors.add(randomColor);
+        }
+
+        function displayInventory() {
+            inventory.innerHTML = '';
+            collectedColors.forEach(color => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'inventory-item';
+                colorDiv.style.backgroundColor = color;
+                inventory.appendChild(colorDiv);
+            });
         }
     </script>
 </body>
